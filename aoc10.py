@@ -40,25 +40,12 @@ def count_valid_arrangements(lines):
         cache[key] = 0
         return 0
 
-
     count = count_valid_arrangements(tmp[:-1])
-    # print(f"0: ({count}) {tmp}")
     if len(tmp)>3 and (tmp[-1]-tmp[-4]<=3):
-        # print(f"3: {tmp[:-3]}")
         count += count_valid_arrangements(tmp[:-3]) + count_valid_arrangements(tmp[:-2])
     elif len(tmp)>2 and (tmp[-1]-tmp[-3]<=3):
-        # print(f"2: {tmp[:-2]}")
         count += count_valid_arrangements(tmp[:-2])
-    elif len(tmp)>1 and (tmp[-1]-tmp[-2]<3):
-        #print(f"1: {tmp[:-1]}")
-        # count += count_valid_arrangements(tmp[:-1])
-        pass
-    
-    if (tmp[-1]-tmp[-2]) == 3:
-        count = count_valid_arrangements(tmp[:-1])
-    
-    # print(f"*: ({count}) {tmp}")
-    
+        
     cache[key] = count
     return count
 

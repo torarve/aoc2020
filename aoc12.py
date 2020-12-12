@@ -51,9 +51,7 @@ class Ship2():
     def do(self, command):
         action, value = re.fullmatch("(N|S|E|W|L|R|F)(\\d+)", command).groups()
         value = int(value)
-        self._handle(action, value)
-
-    def _handle(self, action, value):
+        
         if action == "N":
             self.waypoint_y += value
         elif action == "S":

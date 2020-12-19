@@ -1,17 +1,18 @@
-numbers = []
+import itertools
 
-with open("input1.txt") as file:
-    numbers = [int(x.strip()) for x in file.readlines() if x != ""]
+def read_input():
+    with open("input1.txt") as file:
+        return [int(x.strip()) for x in file.readlines() if x != ""]
 
-for i in numbers:
-    for j in numbers:
-        if i + j == 2020:
-            # print(i, j)
-            print(i*j)
+numbers = read_input()
 
-for i in numbers:
-    for j in numbers:
-        for k in numbers:
-            if i + j + k == 2020:
-                # print(i, j, k)
-                print(i*j*k)
+i, j = [tuple(x) 
+    for x in itertools.combinations(numbers, 2) 
+    if sum(x)==2020].pop()
+
+print(f"{i}+{j}=2020, {i}*{j}={i*j}")
+
+i, j, k = [tuple(x)
+    for x in itertools.combinations(numbers, 3)
+    if sum(x)==2020].pop()
+print(f"{i}+{j}+{k}=2020, {i}*{j}*{k}={i*j*k}")

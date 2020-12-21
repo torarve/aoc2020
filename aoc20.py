@@ -1,12 +1,10 @@
 import re
 import copy
 import math
-import itertools
 
 def get_input():
     with open('input20.txt') as file:
         return [x.strip() for x in file]
-
 
 class Tile:
     def __init__(self, data):
@@ -30,13 +28,6 @@ class Tile:
     @property
     def left(self):
         return "".join([x[0] for x in self.data])
-
-    @property
-    def sides(self):
-        return [self.left, self.top, self.right, self.bottom]
-
-    def flip_vertical(self):
-        return Tile([x[::-1] for x in self.data])
 
     def flip_horizontal(self):
         return Tile(self.data[::-1])
@@ -271,9 +262,6 @@ def matches(line, filter):
 
 def find_monsters(image_data, filter):
     for tile in rotations_and_reflections(Tile(image_data)):
-        # for row in tile.data:
-        #     print(row)
-        # print()
         result = []
         for y in range(0, height-m_height+1):
             lines = tile.data[y:(y+m_height)]
@@ -287,6 +275,3 @@ def find_monsters(image_data, filter):
 found_monsters = find_monsters(image_data, monster)
 roughness = sum([row.count("#") for row in image_data])-len(found_monsters)*sum([row.count("#") for row in monster])
 print(roughness)
-
-# print(m_width, m_height)
-# print(width, height)

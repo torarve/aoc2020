@@ -1,5 +1,4 @@
 import re
-import copy
 import math
 
 def get_input():
@@ -8,40 +7,42 @@ def get_input():
 
 class Tile:
     def __init__(self, data):
-        self.data = data
+        self.size = len(data)
+        self._data = "".join(data)
 
     def __repr__(self):
-        return "\n".join(self.data)
+        return "\n".join(self.rows)
 
     @property
     def top(self):
-        return self.data[0]
+        return self._data[0:self.size]
 
     @property
     def bottom(self):
-        return self.data[-1]
+        return self._data[self.size*(self.size-1):]
 
     @property
     def right(self):
-        return "".join([x[-1] for x in self.data])
+        return self._data[self.size-1::self.size]
 
     @property
     def left(self):
-        return "".join([x[0] for x in self.data])
+        return self._data[0::self.size]
+
+    @property
+    def rows(self):
+        return [self._data[y*self.size:(y+1)*self.size] for y in range(0,self.size)]
+
+    def _row(self, y):
+        return self._data[y*self.size:(y+1)*self.size]
 
     def flip_horizontal(self):
-        return Tile(self.data[::-1])
+        return Tile([self._row(y) for y in range(self.size-1, -1, -1)])
 
-    def rotate(self, count=1):
-        def column(idx):
-            return  "".join([x[idx] for x in self.data[::-1]])
-
-        result = Tile([column(i) for i in range(0, len(self.data))])
-        if count>1:
-            return result.rotate(count-1)
+    def rotate(self):
+        result = Tile([self._data[(self.size-1)*self.size+i::-self.size] 
+            for i in range(0, self.size)])
         return result
-
-
 
 def parse_tiles(lines):
     current_tile = 0
@@ -178,14 +179,22 @@ print(f"Number of tiles: {len(tiles)}")
 print(f"Number of dimensions: {size}")
 
 def rotations_and_reflections(tile: Tile):
-    yield tile
-    yield tile.rotate()
-    yield tile.rotate(2)
-    yield tile.rotate(3)
-    yield tile.flip_horizontal()
-    yield tile.flip_horizontal().rotate()
-    yield tile.flip_horizontal().rotate(2)
-    yield tile.flip_horizontal().rotate(3)
+    t = Tile(tile.rows)
+    yield t
+    t = t.rotate()
+    yield t
+    t = t.rotate()
+    yield t
+    t = t.rotate()
+    yield t
+    t = tile.flip_horizontal()
+    yield t
+    t = t.rotate()
+    yield t
+    t = t.rotate()
+    yield t
+    t = t.rotate()
+    yield t
 
 def find_solution_impl(solution, count, tiles):
     remaining = set(tiles.keys()).difference([x for x in solution if x is not None])
@@ -227,7 +236,6 @@ def find_solution(tiles):
         print(f"Checking {t}...")
         solution[0] = t
 
-        #tmp = copy.deepcopy(tiles)
         for tile in rotations_and_reflections(tiles[t]):
             tiles[t] = tile
             result = find_solution_impl(solution, 1, tiles)
@@ -249,7 +257,7 @@ for i in range(0,size):
     def clip_and_join(args):
         return "".join([x[1:-1] for x in args])
 
-    row = [tiles[x].data[1:-1] for x in result[i*size:(i+1)*size]]
+    row = [tiles[x].rows[1:-1] for x in result[i*size:(i+1)*size]]
     image_data.extend([clip_and_join (x) for x in zip(*list(row))])
 
 m_width = len(monster[0])
@@ -264,7 +272,7 @@ def find_monsters(image_data, filter):
     for tile in rotations_and_reflections(Tile(image_data)):
         result = []
         for y in range(0, height-m_height+1):
-            lines = tile.data[y:(y+m_height)]
+            lines = tile.rows[y:(y+m_height)]
             for x in range(0,width-m_width+1):
                 m = [matches(lines[i][x:x+m_width], filter[i]) for i in range(0, m_height)]
                 if all(m):

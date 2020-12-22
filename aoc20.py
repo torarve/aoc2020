@@ -186,9 +186,8 @@ print(f"Number of tiles: {len(tiles)}")
 print(f"Number of dimensions: {size}")
 
 def rotations_and_reflections(tile: Tile):
-    t = Tile(tile.rows)
-    yield t
-    t = t.rotate()
+    yield tile
+    t = tile.rotate()
     yield t
     t = t.rotate()
     yield t

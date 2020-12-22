@@ -1,4 +1,3 @@
-import re
 import collections
 
 def get_input():
@@ -90,8 +89,7 @@ def play_game(player1, player2):
         if len(player1)>=hand1 and len(player2)>=hand2:
             sub1 = collections.deque([x for x in player1][-hand1:])
             sub2 = collections.deque([x for x in player2][-hand2:])
-            play_game(sub1, sub2)
-            player1_won_round = len(sub1)>0
+            player1_won_round = play_game(sub1, sub2)
         else:
             player1_won_round = hand1>hand2
         

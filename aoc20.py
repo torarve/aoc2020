@@ -239,7 +239,6 @@ def find_solution_impl(solution, count, tiles):
 def find_solution(tiles):
     solution = [None]*(size*size)
     for t in tiles:
-        print(f"Checking {t}...")
         solution[0] = t
 
         for tile in rotations_and_reflections(tiles[t]):

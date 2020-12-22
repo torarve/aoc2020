@@ -4,18 +4,19 @@ def read_input():
     with open("input2.txt") as file:
         return [x.strip() for x in file.readlines()]
 
-def is_valid_part1(line):
+def parse_line(line):
     m = re.match("(\\d+)-(\\d+) (\\w): (.+)", line)
-    lower, upper, char, password = m.groups()
+    first, second, char, password = m.groups()
+    return int(first), int(second), char, password
+
+def is_valid_part1(line):
+    lower, upper, char, password = parse_line(line)
     count = password.count(char)
     return count>=int(lower) and count <= int(upper)
 
 def is_valid_part2(line):
-    m = re.match("(\\d+)-(\\d+) (\\w): (.+)", line)
-    first, second, char, password = m.groups()
-    first_pos = int(first) - 1
-    second_pos = int(second) - 1
-    return (password[first_pos]==char) ^ (password[second_pos]==char)
+    first, second, char, password = parse_line(line)
+    return (password[first-1]==char) ^ (password[second-1]==char)
 
 lines = read_input()
 

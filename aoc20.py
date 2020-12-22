@@ -9,6 +9,8 @@ class Tile:
     def __init__(self, data):
         self.size = len(data)
         self._data = "".join(data)
+        self._rotate = None
+        self._flipped = None
 
     def __repr__(self):
         return "\n".join(self.rows)
@@ -37,12 +39,17 @@ class Tile:
         return self._data[y*self.size:(y+1)*self.size]
 
     def flip_horizontal(self):
-        return Tile([self._row(y) for y in range(self.size-1, -1, -1)])
+        if self._flipped is None:
+            self._flipped = Tile([self._row(y) for y in range(self.size-1, -1, -1)])
+
+        return self._flipped
 
     def rotate(self):
-        result = Tile([self._data[(self.size-1)*self.size+i::-self.size] 
-            for i in range(0, self.size)])
-        return result
+        if self._rotate is None:
+            result = Tile([self._data[(self.size-1)*self.size+i::-self.size] 
+                for i in range(0, self.size)])
+            self._rotate = result
+        return self._rotate
 
 def parse_tiles(lines):
     current_tile = 0

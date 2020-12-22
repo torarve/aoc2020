@@ -9,6 +9,8 @@ class Tile:
     def __init__(self, data):
         self.size = len(data)
         self._data = "".join(data)
+        self._left = None
+        self._top = None
         self._rotate = None
         self._flipped = None
 
@@ -17,7 +19,9 @@ class Tile:
 
     @property
     def top(self):
-        return self._data[0:self.size]
+        if self._top is None:
+            self._top = self._data[0:self.size]
+        return self._top
 
     @property
     def bottom(self):
@@ -29,7 +33,9 @@ class Tile:
 
     @property
     def left(self):
-        return self._data[0::self.size]
+        if self._left is None:
+            self._left = self._data[0::self.size]
+        return self._left
 
     @property
     def rows(self):

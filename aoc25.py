@@ -3,7 +3,7 @@ def get_input():
         return [int(x.strip()) for x in file]
 
 def transform(subject_number, loop_size, modulo):
-    return (subject_number**loop_size) % modulo
+    return pow(subject_number, loop_size, modulo)
 
 def brute_force(public_key, subject_number, modulo):
     private_key = 1
